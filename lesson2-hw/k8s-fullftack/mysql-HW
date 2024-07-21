@@ -1,0 +1,43 @@
+╰$ kubectl get services -n fullstack-app
+NAME                      TYPE           CLUSTER-IP      EXTERNAL-IP                               PORT(S)        AGE
+external-service          ExternalName   <none>          mysql-service.default.svc.cluster.local   <none>         14h
+my-sql-frontend-service   NodePort       10.99.71.187    <none>                                    80:30001/TCP   13h
+mysql                     ClusterIP      10.99.137.198   <none>                                    3306/TCP       14h
+mysql-backend-service     ClusterIP      10.109.98.130   <none>                                    80/TCP         13h
+
+
+worked with port 30001
+root@frontend-848db7f697-kqw2t:/# curl -v http://192.168.49.2:30001
+*   Trying 192.168.49.2:30001...
+* Connected to 192.168.49.2 (192.168.49.2) port 30001 (#0)
+> GET / HTTP/1.1
+> Host: 192.168.49.2:30001
+> User-Agent: curl/7.88.1
+> Accept: */*
+> 
+< HTTP/1.1 200 OK
+
+
+Worked with port 80 in backend 80
+root@frontend-848db7f697-kqw2t:/# curl -v http://mysql-backend-service:80
+*   Trying 10.109.98.130:80...
+* Connected to mysql-backend-service (10.109.98.130) port 80 (#0)
+> GET / HTTP/1.1
+> Host: mysql-backend-service
+> User-Agent: curl/7.88.1
+> Accept: */*
+> 
+< HTTP/1.1 200 OK
+< Server: nginx/1.27.0
+
+
+root@backend-7564b7c477-d2c9s:/# curl -v http://mysql:3306
+*   Trying 10.99.137.198:3306...
+* Connected to mysql (10.99.137.198) port 3306 (#0)
+> GET / HTTP/1.1
+> Host: mysql:3306
+> User-Agent: curl/7.88.1
+> Accept: */*
+
+
+

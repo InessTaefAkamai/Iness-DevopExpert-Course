@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: backend-config
+  namespace: multi-tier-app
+data:
+  backend.properties: |
+    # Backend configuration properties
+    server.port=8080
+    logging.level=INFO

@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mysql-config
+  namespace: fullstack-app
+data:
+  database-name: mydatabase
+  database-user: bXl1c2Vy
+  database-password: bXlwYXNzd29yZA==
+  my.cnf: |
+    [mysqld]
+    bind-address = 0.0.0.0
+    port = 3306

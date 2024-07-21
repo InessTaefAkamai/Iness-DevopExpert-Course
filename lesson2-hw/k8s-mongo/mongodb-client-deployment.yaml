@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mongodb-client
+  namespace: secure-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mongodb-client
+  template:
+    metadata:
+      labels:
+        app: mongodb-client
+    spec:
+      containers:
+      - name: mongodb-client
+        image: mongo:latest
+        command: [ "sleep", "infinity" ]

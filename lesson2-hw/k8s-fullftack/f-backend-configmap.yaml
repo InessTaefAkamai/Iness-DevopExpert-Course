@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: backend-config
+  namespace: fullstack-app
+data:
+  backend.properties: |
+    # Backend configuration properties
+    server.port=80
+    logging.level=INFO

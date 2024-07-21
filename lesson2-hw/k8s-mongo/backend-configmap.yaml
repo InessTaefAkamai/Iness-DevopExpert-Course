@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: backend-configmap
+  namespace: secure-app
+data:
+  database.host: mongodb-service
+  database.port: "27017"
+  database.name: mydatabase
+

@@ -1,0 +1,32 @@
+# rbac.yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: app-service-account
+  namespace: secure-app
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: app-role
+  namespace: secure-app
+rules:
+- apiGroups: [""]
+  resources: ["pods", "services", "deployments", "configmaps", "secrets"]
+  verbs: ["get", "list", "watch", "create", "update", "delete"]
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: app-role-binding
+  namespace: secure-app
+subjects:
+- kind: ServiceAccount
+  name: app-service-account
+  namespace: secure-app
+roleRef:
+  kind: Role
+  name: app-role
+  apiGroup: rbac.authorization.k8s.io

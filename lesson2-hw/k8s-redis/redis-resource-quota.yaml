@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: smulti-tier-app-quota
+  namespace: multi-tier-app
+spec:
+  hard:
+    requests.cpu: "1"          # Set maximum CPU requests to 4 cores
+    requests.memory: 1Gi       # Set maximum memory requests to 4GiB
+    limits.cpu: "2"            # Set maximum CPU limits to 8 cores
+    limits.memory: 2Gi         # Set maximum memory limits to 8GiB
+    pods: "20"                 # Set maximum number of pods to 20

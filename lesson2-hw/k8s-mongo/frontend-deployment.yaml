@@ -1,0 +1,62 @@
+# frontend-deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend-deployment
+  namespace: secure-app
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: frontend
+  template:
+    metadata:
+      labels:
+        app: frontend
+    spec:
+      serviceAccountName: app-service-account
+      containers:
+      - name: frontend
+        image: nginx:latest
+        resources:
+          requests:
+            memory: "32Mi"   # specify the memory request
+            cpu: "125m"      # specify the CPU request
+          limits:
+            memory: "64Mi"  # specify the memory limit
+            cpu: "250m"      # specify the CPU limit
+        ports:
+        - containerPort: 80
+        env:
+        - name: BACKEND_HOST
+          value: backend-service
+        - name: BACKEND_URL
+          value: "http://backend-service.secure-app.svc.cluster.local:8080"
+        - name: BACKEND_PORT
+          value: "8080"
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 15
+          periodSeconds: 20
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend-service
+  namespace: secure-app
+spec:
+  type: NodePort
+  ports:
+  - port: 80
+    targetPort: 80
+    nodePort: 30003
+  selector:
+    app: frontend

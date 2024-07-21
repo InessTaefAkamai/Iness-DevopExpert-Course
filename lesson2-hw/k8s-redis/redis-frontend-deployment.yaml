@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend
+  namespace: multi-tier-app
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: frontend
+  template:
+    metadata:
+      labels:
+        app: frontend
+    spec:
+      containers:
+        - name: frontend
+          image: nginx:latest
+          resources:
+            requests:
+              memory: "32Mi"   # specify the memory request
+              cpu: "125m"      # specify the CPU request
+            limits:
+              memory: "64Mi"  # specify the memory limit
+              cpu: "250m"      # specify the CPU limit
+          ports:
+            - containerPort: 80
+          env:
+            - name: BACKEND_HOST
+              value: "backend"
+            - name: BACKEND_PORT
+              value: "8080"
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend
+  namespace: multi-tier-app
+spec:
+  selector:
+    app: frontend
+  ports:
+    - port: 80
+      targetPort: 80
+      nodePort: 30002
+  type: NodePort
+
+
+

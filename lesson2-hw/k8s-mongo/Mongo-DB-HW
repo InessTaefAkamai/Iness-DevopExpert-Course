@@ -1,0 +1,48 @@
+Mongo-DB
+1. **Check the Frontend Service:**
+```sh
+curl http://<minikube-ip>:30003
+```
+root@frontend-deployment-857d6d5c74-cscbj:/# curl -v http://192.168.49.2:30003
+*   Trying 192.168.49.2:30003...
+* Connected to 192.168.49.2 (192.168.49.2) port 30003 (#0)
+> GET / HTTP/1.1
+> Host: 192.168.49.2:30003
+> User-Agent: curl/7.88.1
+> Accept: */*
+> 
+< HTTP/1.1 200 OK
+
+2. **Access the Backend Service from the Frontend Pod:**
+
+root@frontend-deployment-857d6d5c74-cscbj:/# curl -v http://backend-service:80  
+*   Trying 10.99.205.155:80...
+* Connected to backend-service (10.99.205.155) port 80 (#0)
+> GET / HTTP/1.1
+> Host: backend-service
+> User-Agent: curl/7.88.1
+> Accept: */*
+> 
+< HTTP/1.1 200 OK
+
+3. **Verify Database Connection from the Backend Pod:**
+root@backend-deployment-c98c674fd-4jbv7:/# curl -v http://mongodb-service:27017
+*   Trying 10.98.105.141:27017...
+* Connected to mongodb-service (10.98.105.141) port 27017 (#0)
+> GET / HTTP/1.1
+> Host: mongodb-service:27017
+> User-Agent: curl/7.88.1
+> Accept: */*
+> 
+* HTTP 1.0, assume close after body
+< HTTP/1.0 200 OK
+
+
+Multi-Tier Web Application
+
+
+
+
+
+
+

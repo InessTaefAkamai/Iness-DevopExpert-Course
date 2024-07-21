@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: external-service
+  namespace: secure-app
+spec:
+  type: ExternalName
+  externalName: mongodb.secure-app.svc.cluster.local

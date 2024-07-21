@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: redis-config
+  namespace: multi-tier-app
+data:
+  redis.conf: |
+    # Sample Redis configuration
+    port 6379
+    maxmemory 2GB
