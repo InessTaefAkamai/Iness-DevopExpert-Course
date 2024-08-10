@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: postgres-config
+  namespace: my-project
+data:
+  POSTGRES_PASSWORD: password
+  postgres-init.sql: |
+    CREATE TABLE your_table (
+        id SERIAL PRIMARY KEY,
+        column1 TEXT NOT NULL,
+        column2 TEXT NOT NULL
+    );
+    
+    INSERT INTO your_table (column1, column2) VALUES ('sample1', 'data1');
+        
+                                 

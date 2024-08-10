@@ -1,0 +1,8 @@
+cert creation
+
+openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout cheese.key -out cheese.crt -subj "/CN=ams.cheese.com/O=Cheese Store"
+
+Base64 format from k8s
+
+kubectl create secret tls cheese-tls --cert=cheese.crt --key=cheese.key
+

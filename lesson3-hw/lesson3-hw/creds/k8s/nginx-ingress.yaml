@@ -1,0 +1,31 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: nginx-ingress
+  namespace: creds
+spec:
+  rules:
+  - host: mysql.services.com
+    http:
+      paths:
+      - path: /username
+        pathType: Prefix
+        backend:
+          service:
+            name: nginx-username
+            port:
+              number: 80
+      - path: /password
+        pathType: Prefix
+        backend:
+          service:
+            name: nginx-password
+            port:
+              number: 80
+      - path: /url
+        pathType: Prefix
+        backend:
+          service:
+            name: nginx-url
+            port:
+              number: 80

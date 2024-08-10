@@ -1,0 +1,32 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx-config
+  namespace: creds
+data:
+  nginx.conf: |
+    server {
+        listen 80;
+        server_name mysql.services.com;
+
+        location /username {
+            alias /usr/share/nginx/html/;
+            try_files $uri =404;
+            autoindex off;
+            add_header Content-Type text/plain;
+        }
+
+        location /password {
+            alias /usr/share/nginx/html/;
+            try_files $uri =404;
+            autoindex off;
+            add_header Content-Type text/plain;
+        }
+
+        location /url {
+            alias /usr/share/nginx/html/;
+            try_files $uri =404;
+            autoindex off;
+            add_header Content-Type text/plain;
+        }
+    }

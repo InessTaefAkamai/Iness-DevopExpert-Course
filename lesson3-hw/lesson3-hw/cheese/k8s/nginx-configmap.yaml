@@ -1,0 +1,33 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx-config
+  namespace: cheese
+data:
+  cheese-store.conf: |
+  index.html: |
+    <html>
+    <body>
+    <h1>Welcome to Cheese Store</h1>
+    <p>Serving the best Cheddar and Gauda cheese.</p>
+    </body>
+    </html>
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx
+  namespace: cheese
+spec:
+  containers:
+  - name: nginx
+    image: nginx:latest
+    volumeMounts:
+    - name: nginx-config-volume
+      mountPath: /usr/share/nginx/html
+  volumes:
+  - name: nginx-config-volume
+    configMap:
+      name: nginx-config
+
+

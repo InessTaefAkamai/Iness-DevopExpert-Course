@@ -1,0 +1,11 @@
+Image in dockerhub - https://hub.docker.com/r/itaef/flask-app
+
+Install react
+brew install node
+npm install -g npm
+npm cache clean --force
+npx create-react-app frontend
+
+image react-app
+https://hub.docker.com/repository/docker/itaef/react-app/tags
+

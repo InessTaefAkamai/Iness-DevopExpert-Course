@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-username
+  namespace: creds
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx-username
+  template:
+    metadata:
+      labels:
+        app: nginx-username
+    spec:
+      containers:
+        - name: nginx
+          image: nginx:latest
+          volumeMounts:
+            - name: nginx-config
+              mountPath: /etc/nginx/nginx.conf
+              subPath: nginx.conf
+            - name: secret-volume
+              mountPath: /usr/share/nginx/html
+      volumes:
+        - name: nginx-config
+          configMap:
+            name: nginx-config
+        - name: secret-volume
+          secret:
+            secretName: db-creds
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-username
+  namespace: creds
+spec:
+  selector:
+    app: nginx-username
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
