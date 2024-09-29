@@ -16,15 +16,16 @@ pipeline {
         stage('Build Docker Images') {
             steps {
                 script {
-                    // Declare variables at the top of the script block
-                    def consumerImage = docker.build("${DOCKER_REGISTRY}/consumer:3.0.0", "-f k8s-project/consumer/Dockerfile k8s-project/consumer")
-                    def producerImage = docker.build("${DOCKER_REGISTRY}/producer:3.0.0", "-f k8s-project/producer/Dockerfile k8s-project/producer")
+                    // Declare variables for images
+                    consumerImage = docker.build("${DOCKER_REGISTRY}/consumer:3.0.0", "-f k8s-project/consumer/Dockerfile k8s-project/consumer")
+                    producerImage = docker.build("${DOCKER_REGISTRY}/producer:3.0.0", "-f k8s-project/producer/Dockerfile k8s-project/producer")
                 }
             }
         }
         stage('Login to Docker Hub') {
             steps {
                 script {
+                    // Login to Docker registry
                     docker.withRegistry('https://docker.io', DOCKER_CREDENTIALS_ID) {
                         echo 'Logged in to Docker Hub'
                     }
@@ -34,7 +35,7 @@ pipeline {
         stage('Push Docker Images') {
             steps {
                 script {
-                    // Make sure to use the correct scope for image pushing
+                    // Push images to Docker registry
                     docker.withRegistry('https://docker.io', DOCKER_CREDENTIALS_ID) {
                         consumerImage.push()
                         producerImage.push()
