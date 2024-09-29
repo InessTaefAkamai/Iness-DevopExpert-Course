@@ -5,7 +5,7 @@ pipeline {
         GIT_REPOSITORY = 'git@github.com:InessTaefAkamai/Iness-DevopExpert-Course.git'
         DOCKER_REGISTRY = 'itaef'  // Update with your actual Docker registry if needed
         DOCKER_CREDENTIALS_ID = 'DOCKER_CREDENTIALS_ID'  // Jenkins credentials ID
-        PATH = "/usr/local/bin:${PATH}"
+        PATH+EXTRA="/usr/local/bin:/usr/bin"
     }
 
     stages {
