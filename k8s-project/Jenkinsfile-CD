@@ -7,49 +7,37 @@ pipeline {
     }
 
     stages {
-        stage('Checkout Helm Charts Repository') {
+        stage('Checkout Helm Charts') {
             steps {
-                git url: "${GIT_REPOSITORY}", branch: 'main'
+                git 'https://github.com/InessTaefAkamai/Iness-DevopExpert-Course.git'
             }
         }
-
         stage('Deploy RabbitMQ') {
             steps {
                 script {
-                    withCredentials([file(credentialsId: KUBE_CONFIG_ID, variable: 'KUBECONFIG')]) {
-                        sh "helm upgrade --install rabbitmq ./RabbitMQ -f ./RabbitMQ/values.yaml --namespace k8s-project --create-namespace"
-                    }
+                    sh 'helm upgrade --install rabbitmq ./RabbitMQ -f ./RabbitMQ/values.yaml --namespace k8s-project --create-namespace'
                 }
             }
         }
-
         stage('Deploy Consumer') {
             steps {
                 script {
-                    withCredentials([file(credentialsId: KUBE_CONFIG_ID, variable: 'KUBECONFIG')]) {
-                        sh "helm upgrade --install consumer ./consumer -f ./consumer/values.yaml --namespace k8s-project"
-                    }
+                    sh 'helm upgrade --install consumer ./consumer -f ./consumer/values.yaml --namespace k8s-project'
                 }
             }
         }
-
         stage('Deploy Producer') {
             steps {
                 script {
-                    withCredentials([file(credentialsId: KUBE_CONFIG_ID, variable: 'KUBECONFIG')]) {
-                        sh "helm upgrade --install producer ./producer -f ./producer/values.yaml --namespace k8s-project"
-                    }
+                    sh 'helm upgrade --install producer ./producer -f ./producer/values.yaml --namespace k8s-project'
                 }
             }
         }
     }
 
     post {
-        success {
-            echo 'Deployment successful!'
-        }
-        failure {
-            echo 'Deployment failed.'
+        always {
+            echo 'Cleaning up...'
         }
     }
 }
