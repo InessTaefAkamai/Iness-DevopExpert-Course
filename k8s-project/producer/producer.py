@@ -17,7 +17,7 @@ try:
         channel.basic_publish(exchange='', routing_key='hello', body=message,
                               properties=pika.BasicProperties(delivery_mode=2))  # Make message persistent
         print(f"Sent: {message}")
-        time.sleep(1)
+        time.sleep(20)
 
 except pika.exceptions.AMQPConnectionError as e:
     print(f"Connection error: {e}")
