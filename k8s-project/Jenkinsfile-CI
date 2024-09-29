@@ -5,6 +5,7 @@ pipeline {
         GIT_REPOSITORY = 'https://github.com/InessTaefAkamai/Iness-DevopExpert-Course.git'
         DOCKER_REGISTRY = 'docker.io/itaef'
         DOCKER_CREDENTIALS_ID = 'DOCKER_CREDENTIALS_ID'
+        BASE_VERSION = '3.0.0'
     }
 
     stages {
@@ -13,12 +14,23 @@ pipeline {
                 git url: "${GIT_REPOSITORY}", branch: 'main'
             }
         }
+        stage('Determine New Version') {
+            steps {
+                script {
+                    // Parse the base version and increment
+                    def versionParts = BASE_VERSION.tokenize('.')
+                    def patchVersion = versionParts[2].toInteger() + 1
+                    def newVersion = "${versionParts[0]}.${versionParts[1]}.${patchVersion}"
+                    env.NEW_VERSION = newVersion
+                }
+            }
+        }
         stage('Build Docker Images') {
             steps {
                 script {
-                    // Build images with the 'latest' tag
-                    consumerImage = docker.build("${DOCKER_REGISTRY}/consumer:latest", "-f k8s-project/consumer/Dockerfile k8s-project/consumer")
-                    producerImage = docker.build("${DOCKER_REGISTRY}/producer:latest", "-f k8s-project/producer/Dockerfile k8s-project/producer")
+                    // Build images with the new version tag
+                    consumerImage = docker.build("${DOCKER_REGISTRY}/consumer:${NEW_VERSION}", "-f k8s-project/consumer/Dockerfile k8s-project/consumer")
+                    producerImage = docker.build("${DOCKER_REGISTRY}/producer:${NEW_VERSION}", "-f k8s-project/producer/Dockerfile k8s-project/producer")
                 }
             }
         }
@@ -35,8 +47,8 @@ pipeline {
             steps {
                 script {
                     docker.withRegistry('https://index.docker.io/v1/', DOCKER_CREDENTIALS_ID) {
-                        consumerImage.push('latest')
-                        producerImage.push('latest')
+                        consumerImage.push("${NEW_VERSION}")
+                        producerImage.push("${NEW_VERSION}")
                     }
                 }
             }
@@ -44,7 +56,7 @@ pipeline {
     }
     post {
         success {
-            echo 'Build and Push successful!'
+            echo "Build and Push successful with version: ${NEW_VERSION}"
         }
         failure {
             echo 'Build or Push failed.'
