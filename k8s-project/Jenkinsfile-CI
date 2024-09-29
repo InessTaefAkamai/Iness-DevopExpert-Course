@@ -1,1 +1,45 @@
+pipeline {
+    agent any
+    environment {
+        DOCKER_REGISTRY = 'ghcr.io/itaef'
+        DOCKER_CREDENTIALS_ID = 'DOCKER_CREDENTIALS_ID'  // Use the ID of your Docker credentials
+        GIT_REPOSITORY = 'git@github.com:InessTaefAkamai/Iness-DevopExpert-Course.git'  // Replace with your repository URL
+    }
+    stages {
+        stage('Clone Repository') {
+            steps {
+                git url: "${GIT_REPOSITORY}"
+            }
+        }
+        stage('Build Docker Images') {
+            steps {
+                script {
+                    // Build the consumer image
+                    def consumerImage = docker.build("${DOCKER_REGISTRY}/consumer:3.0.0", "-f k8s-project/consumer/Dockerfile k8s-project/consumer")
+
+                    // Build the producer image
+                    def producerImage = docker.build("${DOCKER_REGISTRY}/producer:3.0.0", "-f k8s-project/producer/Dockerfile k8s-project/producer")
+                }
+            }
+        }
+        stage('Push Docker Images') {
+            steps {
+                script {
+                    docker.withRegistry("https://${DOCKER_REGISTRY}", DOCKER_CREDENTIALS_ID) {
+                        producerImage.push()
+                        consumerImage.push()
+                    }
+                }
+            }
+        }
+    }
+    post {
+        success {
+            echo 'Build and Push successful!'
+        }
+        failure {
+            echo 'Build or Push failed.'
+        }
+    }
+}
 
