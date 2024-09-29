@@ -16,9 +16,11 @@ pipeline {
         stage('Build Docker Images') {
             steps {
                 script {
-                    // Declare variables for images
-                    consumerImage = docker.build("${DOCKER_REGISTRY}/consumer:3.0.0", "-f k8s-project/consumer/Dockerfile k8s-project/consumer")
-                    producerImage = docker.build("${DOCKER_REGISTRY}/producer:3.0.0", "-f k8s-project/producer/Dockerfile k8s-project/producer")
+                    // Declare a unique tag for the images
+                    def uniqueTag = "${env.BUILD_ID}" // You can also use timestamp if needed
+                    // Build images with unique tags
+                    consumerImage = docker.build("${DOCKER_REGISTRY}/consumer:${uniqueTag}", "-f k8s-project/consumer/Dockerfile k8s-project/consumer")
+                    producerImage = docker.build("${DOCKER_REGISTRY}/producer:${uniqueTag}", "-f k8s-project/producer/Dockerfile k8s-project/producer")
                 }
             }
         }
@@ -26,21 +28,12 @@ pipeline {
             steps {
                 script {
                     // Login to Docker registry
-                    docker.withRegistry('https://docker.io', DOCKER_CREDENTIALS_ID) {
-                        echo 'Logged in to Docker Hub'
+                    docker.withRegistry('https://index.docker.io/v1/', DOCKER_CREDENTIALS_ID) {
+                        echo 'Successfully logged in to Docker Hub'
                     }
                 }
             }
         }
-        stage('Login to Docker Hub index') {
-    steps {
-        script {
-            docker.withRegistry('https://index.docker.io/v1/', DOCKER_CREDENTIALS_ID) {
-                echo 'Successfully logged in to Docker Hub'
-            }
-        }
-    }
-}
         stage('Push Docker Images') {
             steps {
                 script {
