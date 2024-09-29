@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         GIT_REPOSITORY = 'https://github.com/InessTaefAkamai/Iness-DevopExpert-Course.git'
-        KUBE_CONFIG_ID = 'kubeconfig-file' // Update this with your actual kubeconfig credential ID
+        KUBE_CONFIG_ID = 'KUBE_CONFIG_ID'
     }
 
     stages {
@@ -16,8 +16,8 @@ pipeline {
         stage('Deploy RabbitMQ') {
             steps {
                 script {
-                    withCredentials([file(KUBE_CONFIG_ID)]) {
-                        sh "KUBECONFIG=${KUBE_CONFIG_ID} helm upgrade --install rabbitmq ./RabbitMQ -f ./RabbitMQ/values.yaml --namespace k8s-project --create-namespace"
+                    withCredentials([file(credentialsId: KUBE_CONFIG_ID, variable: 'KUBECONFIG')]) {
+                        sh "helm upgrade --install rabbitmq ./RabbitMQ -f ./RabbitMQ/values.yaml --namespace k8s-project --create-namespace"
                     }
                 }
             }
@@ -26,8 +26,8 @@ pipeline {
         stage('Deploy Consumer') {
             steps {
                 script {
-                    withCredentials([file(KUBE_CONFIG_ID)]) {
-                        sh "KUBECONFIG=${KUBE_CONFIG_ID} helm upgrade --install consumer ./consumer -f ./consumer/values.yaml --namespace k8s-project"
+                    withCredentials([file(credentialsId: KUBE_CONFIG_ID, variable: 'KUBECONFIG')]) {
+                        sh "helm upgrade --install consumer ./consumer -f ./consumer/values.yaml --namespace k8s-project"
                     }
                 }
             }
@@ -36,8 +36,8 @@ pipeline {
         stage('Deploy Producer') {
             steps {
                 script {
-                    withCredentials([file(KUBE_CONFIG_ID)]) {
-                        sh "KUBECONFIG=${KUBE_CONFIG_ID} helm upgrade --install producer ./producer -f ./producer/values.yaml --namespace k8s-project"
+                    withCredentials([file(credentialsId: KUBE_CONFIG_ID, variable: 'KUBECONFIG')]) {
+                        sh "helm upgrade --install producer ./producer -f ./producer/values.yaml --namespace k8s-project"
                     }
                 }
             }
