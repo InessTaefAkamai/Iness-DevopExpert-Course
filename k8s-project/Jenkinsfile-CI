@@ -5,7 +5,6 @@ pipeline {
         GIT_REPOSITORY = 'https://github.com/InessTaefAkamai/Iness-DevopExpert-Course.git'
         DOCKER_REGISTRY = 'docker.io/itaef'  // Updated for Docker Hub
         DOCKER_CREDENTIALS_ID = 'DOCKER_CREDENTIALS_ID'  // Jenkins credentials ID
-        PATH = "/usr/local/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
     }
 
     stages {
@@ -17,26 +16,24 @@ pipeline {
         stage('Build Docker Images') {
             steps {
                 script {
-                    // Declare variables at the top level
-                    consumerImage = docker.build("${DOCKER_REGISTRY}/consumer:3.0.0", "-f k8s-project/consumer/Dockerfile k8s-project/consumer")
-                    producerImage = docker.build("${DOCKER_REGISTRY}/producer:3.0.0", "-f k8s-project/producer/Dockerfile k8s-project/producer")
+                    def consumerImage = docker.build("${DOCKER_REGISTRY}/consumer:3.0.0", "-f k8s-project/consumer/Dockerfile k8s-project/consumer")
+                    def producerImage = docker.build("${DOCKER_REGISTRY}/producer:3.0.0", "-f k8s-project/producer/Dockerfile k8s-project/producer")
                 }
             }
         }
         stage('Login to Docker Hub') {
-    steps {
-        script {
-            docker.withRegistry('https://docker.io', DOCKER_CREDENTIALS_ID) {
-                echo 'Logged in to Docker Hub'
+            steps {
+                script {
+                    docker.withRegistry('https://docker.io', DOCKER_CREDENTIALS_ID) {
+                        echo 'Logged in to Docker Hub'
+                    }
+                }
             }
         }
-    }
-}
         stage('Push Docker Images') {
             steps {
                 script {
-                    // Retrieve Docker credentials from Jenkins
-                    docker.withRegistry("https://${DOCKER_REGISTRY}", DOCKER_CREDENTIALS_ID) {
+                    docker.withRegistry('https://docker.io', DOCKER_CREDENTIALS_ID) {
                         // Log in and push images
                         consumerImage.push()
                         producerImage.push()
