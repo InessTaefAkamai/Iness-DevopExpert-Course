@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         GIT_REPOSITORY = 'https://github.com/InessTaefAkamai/Iness-DevopExpert-Course.git'
-        DOCKER_REGISTRY = 'docker.io/itaef'  // Ensure this matches your Docker registry
+        DOCKER_REGISTRY = 'docker.io/itaef'  // Updated for Docker Hub
         DOCKER_CREDENTIALS_ID = 'DOCKER_CREDENTIALS_ID'  // Jenkins credentials ID
         PATH = "/usr/local/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
     }
@@ -17,11 +17,15 @@ pipeline {
         stage('Build Docker Images') {
             steps {
                 script {
+                    // Declare variables at the script level
+                    def consumerImage
+                    def producerImage
+
                     // Build the consumer image
-                    def consumerImage = docker.build("${DOCKER_REGISTRY}/consumer:3.0.0", "-f k8s-project/consumer/Dockerfile k8s-project/consumer")
+                    consumerImage = docker.build("${DOCKER_REGISTRY}/consumer:3.0.0", "-f k8s-project/consumer/Dockerfile k8s-project/consumer")
 
                     // Build the producer image
-                    def producerImage = docker.build("${DOCKER_REGISTRY}/producer:3.0.0", "-f k8s-project/producer/Dockerfile k8s-project/producer")
+                    producerImage = docker.build("${DOCKER_REGISTRY}/producer:3.0.0", "-f k8s-project/producer/Dockerfile k8s-project/producer")
                 }
             }
         }
@@ -29,7 +33,7 @@ pipeline {
             steps {
                 script {
                     // Retrieve Docker credentials from Jenkins
-                    def dockerCredentials = docker.withRegistry("https://${DOCKER_REGISTRY}", DOCKER_CREDENTIALS_ID) {
+                    docker.withRegistry("https://${DOCKER_REGISTRY}", DOCKER_CREDENTIALS_ID) {
                         // Log in and push images
                         consumerImage.push()
                         producerImage.push()
