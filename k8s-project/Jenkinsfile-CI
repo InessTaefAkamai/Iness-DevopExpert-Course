@@ -23,6 +23,15 @@ pipeline {
                 }
             }
         }
+        stage('Login to Docker Hub') {
+    steps {
+        script {
+            docker.withRegistry('https://docker.io', DOCKER_CREDENTIALS_ID) {
+                echo 'Logged in to Docker Hub'
+            }
+        }
+    }
+}
         stage('Push Docker Images') {
             steps {
                 script {
