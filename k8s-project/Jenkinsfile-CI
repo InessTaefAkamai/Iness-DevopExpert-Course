@@ -17,14 +17,8 @@ pipeline {
         stage('Build Docker Images') {
             steps {
                 script {
-                    // Declare variables at the script level
-                    def consumerImage
-                    def producerImage
-
-                    // Build the consumer image
+                    // Declare variables at the top level
                     consumerImage = docker.build("${DOCKER_REGISTRY}/consumer:3.0.0", "-f k8s-project/consumer/Dockerfile k8s-project/consumer")
-
-                    // Build the producer image
                     producerImage = docker.build("${DOCKER_REGISTRY}/producer:3.0.0", "-f k8s-project/producer/Dockerfile k8s-project/producer")
                 }
             }
