@@ -32,6 +32,15 @@ pipeline {
                 }
             }
         }
+        stage('Login to Docker Hub') {
+    steps {
+        script {
+            docker.withRegistry('https://index.docker.io/v1/', DOCKER_CREDENTIALS_ID) {
+                echo 'Successfully logged in to Docker Hub'
+            }
+        }
+    }
+}
         stage('Push Docker Images') {
             steps {
                 script {
