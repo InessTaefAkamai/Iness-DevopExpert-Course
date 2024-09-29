@@ -1,14 +1,16 @@
 pipeline {
     agent any
+
     environment {
-        DOCKER_REGISTRY = 'ghcr.io/itaef'
-        DOCKER_CREDENTIALS_ID = 'DOCKER_CREDENTIALS_ID'  // Use the ID of your Docker credentials
-        GIT_REPOSITORY = 'git@github.com:InessTaefAkamai/Iness-DevopExpert-Course.git'  // Replace with your repository URL
+        GIT_REPOSITORY = 'git@github.com:InessTaefAkamai/Iness-DevopExpert-Course.git'
+        DOCKER_REGISTRY = 'itaef'  // Update with your actual Docker registry if needed
+        DOCKER_CREDENTIALS_ID = 'your-docker-credentials-id'  // Jenkins credentials ID
     }
+
     stages {
         stage('Clone Repository') {
             steps {
-                git url: "${GIT_REPOSITORY}"
+                git url: "${GIT_REPOSITORY}", branch: 'main'
             }
         }
         stage('Build Docker Images') {
@@ -42,4 +44,3 @@ pipeline {
         }
     }
 }
-
