@@ -1,0 +1,30 @@
+image:
+  repository: bitnami/rabbitmq
+  tag: latest
+
+auth:
+  username: "myuser"
+  password: "mypassword"
+
+rabbitmq_host: my-rabbitmq  # Add this line for the RabbitMQ service name
+
+# Service settings
+service:
+  type: ClusterIP
+  port: 5672
+  managementPort: 15672
+
+# RabbitMQ persistence settings
+persistence:
+  enabled: false
+  storageClass: "standard"
+  accessModes:
+    - ReadWriteOnce
+  size: 8Gi
+
+# Replica settings
+replicaCount: 1
+
+# Enable or disable RabbitMQ cluster
+cluster:
+  enabled: false

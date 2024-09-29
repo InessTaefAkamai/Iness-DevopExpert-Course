@@ -1,0 +1,74 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rabbitmq
+  namespace: {{ .Values.namespace }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: rabbitmq
+  template:
+    metadata:
+      labels:
+        app: rabbitmq
+    spec:
+      containers:
+        - name: rabbitmq
+          image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+          ports:
+            - name: amqp
+              containerPort: 5672
+            - name: management
+              containerPort: 15672
+          env:
+            - name: RABBITMQ_USERNAME
+              value: {{ .Values.auth.username | quote }}
+            - name: RABBITMQ_PASSWORD
+              value: {{ .Values.auth.password | quote }}
+            - name: RABBITMQ_HOST
+              value: {{ .Values.rabbitmq_host | quote }}  # Add this line
+          volumeMounts:
+            - name: rabbitmq-data
+              mountPath: /bitnami/rabbitmq
+      volumes:
+        - name: rabbitmq-data
+          persistentVolumeClaim:
+            claimName: rabbitmq-pvc
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: rabbitmq
+  namespace: {{ .Values.namespace }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - name: amqp
+      port: {{ .Values.service.port }}
+      targetPort: 5672
+    - name: management
+      port: {{ .Values.service.managementPort }}
+      targetPort: 15672
+  selector:
+    app: rabbitmq
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: rabbitmq
+  namespace: {{ .Values.namespace }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - name: rabbitmq-port
+      port: {{ .Values.service.port }}
+      targetPort: 5672
+    - name: rabbitmq-management-port
+      port: {{ .Values.service.managementPort }}
+      targetPort: 15672
+  selector:
+    app: rabbitmq

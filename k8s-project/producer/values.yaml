@@ -1,0 +1,4 @@
+namespace: k8s-project
+image:
+  repository: itaef/producer
+  tag: 3.0.0
