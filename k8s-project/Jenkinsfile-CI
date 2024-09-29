@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        GIT_REPOSITORY = 'git@github.com:InessTaefAkamai/Iness-DevopExpert-Course.git'
+        GIT_REPOSITORY = 'https://github.com/InessTaefAkamai/Iness-DevopExpert-Course.git'
         DOCKER_REGISTRY = 'itaef'  // Ensure this matches your Docker registry
         DOCKER_CREDENTIALS_ID = 'DOCKER_CREDENTIALS_ID'  // Jenkins credentials ID
         PATH = "/usr/local/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
