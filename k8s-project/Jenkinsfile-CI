@@ -16,6 +16,7 @@ pipeline {
         stage('Build Docker Images') {
             steps {
                 script {
+                    // Declare variables at the top of the script block
                     def consumerImage = docker.build("${DOCKER_REGISTRY}/consumer:3.0.0", "-f k8s-project/consumer/Dockerfile k8s-project/consumer")
                     def producerImage = docker.build("${DOCKER_REGISTRY}/producer:3.0.0", "-f k8s-project/producer/Dockerfile k8s-project/producer")
                 }
@@ -33,6 +34,7 @@ pipeline {
         stage('Push Docker Images') {
             steps {
                 script {
+                    // Make sure to use the correct scope for image pushing
                     docker.withRegistry('https://docker.io', DOCKER_CREDENTIALS_ID) {
                         consumerImage.push()
                         producerImage.push()
