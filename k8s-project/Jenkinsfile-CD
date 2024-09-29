@@ -9,12 +9,9 @@ pipeline {
     stages {
         stage('Checkout Helm Charts') {
             steps {
-                git branch: 'main', url: 'https://github.com/InessTaefAkamai/Iness-DevopExpert-Course.git'
+                git branch: 'main', url: GIT_REPOSITORY
             }
         }
-        // Other stages...
-    }
-}
         stage('Deploy RabbitMQ') {
             steps {
                 script {
