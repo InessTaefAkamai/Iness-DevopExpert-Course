@@ -4,7 +4,7 @@ pipeline {
     environment {
         GIT_REPOSITORY = 'https://github.com/InessTaefAkamai/Iness-DevopExpert-Course.git'
         KUBE_CONFIG_ID = 'KUBE_CONFIG_ID'
-        HELM_CHARTS_PATH = 'k8s-project/' 
+        HELM_CHARTS_PATH = 'k8s-project/'
     }
 
     stages {
